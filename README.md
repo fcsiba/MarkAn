@@ -12,15 +12,20 @@ better and effective advertising models by using the results of previous adverti
   
 2. The project also consists of a location-based marketing application. A **geo-fence** is created around the user's location and displays stores of different categories that are offering discounts. Users can choose from various categories e.g. shoes, and a list of stores would be shown, that are offering sales. Only those stores will be shown that lie within the specified distance threshold set by the user, such as 5km.  
 
-### Set up the project  
-**Markan web portal**
+### Setting up the project   
+**Markan web portal**  
 1. Download the project.
-2. 
+2. You need to install the folowwing on your computer:   
+  -Install Python 3.6.4   
+  -Install Django 2.0.7   
+3. Boot up **Django server** from root directory using command line and type this command **"python manage.py runserver"**.    
+4. Open your browser and type "http://127.0.0.1:8000/dashboard/"    
+5. The dashboard will appear with live data analytics.   
 
-**Markan mobile application** 
+**Markan mobile application**   
 1. Please visit the following link and download the project:   
-https://github.com/muhamza/Markan-Marketing-Application
-2. Read the follow the instructions in Readme file. 
-3. Make sure you have the following on your computer:
-  -Android Studio 
-  -Emulator with a minimum SDK API Level of 26.
+https://github.com/muhamza/Markan-Marketing-Application  
+2. Read the follow the instructions in Readme file.  
+3. Make sure you have the following on your computer:  
+  -Android Studio  
+  -Emulator with a minimum SDK API Level of 26.  
