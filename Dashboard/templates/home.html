@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<style type="text/css">
+	 #map {
+        height: 400px;
+      }
+</style>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+<title>Welcome to MarkAn Dashboard</title>
+
+{% block head%}
+
+{% endblock %}
+<head/>
+<body>
+	<div class="container-fluid" style="background: red">
+		
+    <h3 style="color: white">MarkAnalytics Dashboard</h1>
+
+</div>
+<br/>
+
+
+
+
+
+
+
+<div class="row">
+<div class="">
+<h3 style="text-align:center"><img style="width:46px"  src="{{store_logo}}"></> Business Campaign details.</h3>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-2">
+</div>
+
+<div class="col-md-8">
+  
+{{df_store | safe}}
+
+</div>
+</div>
+
+
+<hr/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="row" style="padding: 10px">
+<div class="col-md-6">	
+<div class="mytable"> 
+
+{{df_text | safe}}
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+	<div class=" barchart">
+{{df_barchart | safe}}
+<div id="container-barchart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<hr/>
+
+
+
+<div class="row">
+	<div class="col-md-2">
+	</div>
+	<div class="col-md-8">
+	<div id="word-cloud-container"></div>
+</div>
+<div class="col-md-2"></div>
+</div>
+
+
+
+<hr/>
+
+
+<div class="row">
+<h3 style="text-align:center">Location based customers sentiments</h3>
+</div>
+
+<div class="row">
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-10">
+    <div id="map"></div>
+</div>
+</div>
+
+<br/>
+
+
+
+
+<div class="row">
+<h3>Feature extraction </h3>
+<img src="../feature-extraction.PNG"/>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+	 var list = document.getElementsByClassName("mytable")[0]; 
+	 console.log(list)
+     list.getElementsByClassName("full-view-table")[0].setAttribute("id", "example");	
+	 
+	 var barchart = document.getElementsByClassName("barchart")[0]; 
+	 console.log(barchart)
+	 barchart.getElementsByClassName("barchart_dt")[0].setAttribute("id", "barchart-datatable");
+
+
+
+    $('#example').DataTable();
+});
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function () {	
+Highcharts.chart('container-barchart', {
+    data: {
+        table: 'barchart-datatable'
+    },
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Positive and Negative Sentiments overview'
+    },
+    yAxis: {
+        allowDecimals: false,
+        title: {
+            text: 'Frequency'
+        }
+    },
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.series.name + '</b><br/>' +
+                this.point.y + ' ' + this.point.name.toLowerCase();
+        }
+    }
+});	
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function () {	
+var text = "{{word_cloud}}";
+var lines = text.split(/[,\. ]+/g),
+    data = Highcharts.reduce(lines, function (arr, word) {
+        var obj = Highcharts.find(arr, function (obj) {
+            return obj.name === word;
+        });
+        if (obj) {
+            obj.weight += 1;
+        } else {
+            obj = {
+                name: word,
+                weight: 1
+            };
+            arr.push(obj);
+        }
+        return arr;
+    }, []);
+
+Highcharts.chart('word-cloud-container', {
+    series: [{
+        type: 'wordcloud',
+        data: data,
+        name: 'Occurrences'
+    }],
+    title: {
+        text: 'Wordcloud of Consumer Comments'
+    }
+});
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    	
+      // This example requires the Visualization library. Include the libraries=visualization
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
+
+      var map, heatmap;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: {lat: 24.947302, lng: 67.0011}, 
+          mapTypeId: 'roadmap'
+        });
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: getPoints(),
+          map: map
+        });
+      }
+
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+
+      function changeGradient() {
+        var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+      }
+
+      function changeRadius() {
+        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+      }
+
+      function changeOpacity() {
+        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+      }
+
+      // Heatmap data: 500 Points
+      function getPoints() {
+
+        return [
+        
+         new google.maps.LatLng(24.864798333333336, 67.01819833333334),
+
+          
+        
+          new google.maps.LatLng(0.0, 0.0),
+
+          
+        
+          new google.maps.LatLng(24.947302, 67.1747358),
+
+          
+        
+          new google.maps.LatLng(0.0, 0.0),
+
+          
+        
+          new google.maps.LatLng(24.9410736, 67.1138756),
+
+          
+        
+          new google.maps.LatLng(24.86477166666667, 67.01819666666667),
+
+          
+        
+          new google.maps.LatLng(24.9410713, 67.1138782),
+
+          
+        
+          new google.maps.LatLng(24.86477166666667, 67.01819666666667),
+
+          
+        
+          new google.maps.LatLng(24.9438526, 67.1828953),
+
+          
+        
+          new google.maps.LatLng(24.943867499, 67.183018162),
+
+          
+        
+          new google.maps.LatLng(67.1143, 24.9419),
+
+          
+        
+          new google.maps.LatLng(24.940777421, 67.114239062),
+
+          
+        
+          new google.maps.LatLng(0.0, 0.0),
+
+          
+        
+          new google.maps.LatLng(24.947302, 67.1747358),
+
+          
+        
+          new google.maps.LatLng(67.1143, 24.9419),
+
+          
+        
+          new google.maps.LatLng(0.0, 0.0),
+
+          
+        
+          new google.maps.LatLng(24.947302, 67.1747358),
+
+          
+        
+          new google.maps.LatLng(0.0, 0.0),
+
+          
+        
+          new google.maps.LatLng(67.1143, 24.9419),
+
+          
+        
+          new google.maps.LatLng(24.86477166666667, 67.01819666666667),
+
+          
+        
+          new google.maps.LatLng(24.947302, 67.1747358),
+
+          
+        
+          new google.maps.LatLng(24.9410398, 67.1139011),
+
+          
+        
+          new google.maps.LatLng(24.94176601, 67.114233437),
+
+          
+        
+          new google.maps.LatLng(24.9438483, 67.1828955),
+
+          
+        
+          new google.maps.LatLng(67.1143, 24.9419),
+
+          
+        
+          new google.maps.LatLng(24.947302, 67.1747358),
+
+      
+         
+        
+        ];
+      }
+ 
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzhOePBXX2opJlMj41yo1pfDujrmTEPi0&libraries=visualization&callback=initMap">
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
